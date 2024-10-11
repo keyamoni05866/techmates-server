@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import { TUser } from "./user.interface";
 import config from "../../config";
 import bcrypt from "bcrypt";
@@ -27,12 +27,12 @@ const userSchema = new Schema<TUser>(
       type: String,
       required: true,
     },
+    profilePicture: { type: String },
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    verified: { type: Boolean, default: false },
 
-    termsConditionAccepted: {
-      type: Boolean,
-      required: true,
-    },
-    phone: {
+    number: {
       type: String,
     },
     address: {

@@ -12,8 +12,38 @@ const signup = async (payload: TUser) => {
   if (user) {
     throw new AppError(400, "The User is already Exists.");
   }
-  const result = await User.create(payload);
-  return result;
+
+  payload.role = "user";
+
+  const newUser = await User.create(payload);
+
+  const jwtPayload = {
+    _id: newUser._id,
+    name: newUser.name,
+    email: newUser.email,
+    role: newUser.role,
+  };
+
+  //access token
+  const token = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+    expiresIn: config.jwt_access_expires_in,
+  });
+
+  //refresh token
+
+  const refreshToken = jwt.sign(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    {
+      expiresIn: config.jwt_refresh_expires_in,
+    }
+  );
+
+  return {
+    user: newUser,
+    token,
+    refreshToken,
+  };
 };
 
 //sign in for user and admin

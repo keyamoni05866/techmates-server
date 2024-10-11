@@ -5,13 +5,17 @@ import { AuthServices } from "./auth.service";
 
 const signup = catchAsync(async (req, res) => {
   const result = await AuthServices.signup(req.body);
-
+  const { user, token, refreshToken } = result;
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: config.NODE_ENV === "production",
+  });
   if (result) {
     res.status(201).json({
       success: true,
       statusCode: 201,
       message: "Registration Successful",
-      data: result,
+      data: { user, token, refreshToken },
     });
   } else {
     res.status(404).json({
