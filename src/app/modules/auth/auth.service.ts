@@ -18,10 +18,7 @@ const signup = async (payload: TUser) => {
   const newUser = await User.create(payload);
 
   const jwtPayload = {
-    _id: newUser._id,
-    name: newUser.name,
-    email: newUser.email,
-    role: newUser.role,
+    newUser,
   };
 
   //access token
@@ -40,7 +37,6 @@ const signup = async (payload: TUser) => {
   );
 
   return {
-    user: newUser,
     token,
     refreshToken,
   };
@@ -64,8 +60,7 @@ const signin = async (payload: TSignInUser) => {
 
   //access granted: now sending access token
   const jwtPayload = {
-    email: user?.email,
-    role: user?.role,
+    user,
   };
 
   //access token
@@ -84,7 +79,6 @@ const signin = async (payload: TSignInUser) => {
   );
 
   return {
-    user,
     token,
     refreshToken,
   };

@@ -5,7 +5,7 @@ import { AuthServices } from "./auth.service";
 
 const signup = catchAsync(async (req, res) => {
   const result = await AuthServices.signup(req.body);
-  const { user, token, refreshToken } = result;
+  const { token, refreshToken } = result;
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: config.NODE_ENV === "production",
@@ -15,7 +15,7 @@ const signup = catchAsync(async (req, res) => {
       success: true,
       statusCode: 201,
       message: "Registration Successful",
-      data: { user, token, refreshToken },
+      data: { token, refreshToken },
     });
   } else {
     res.status(404).json({
@@ -29,7 +29,7 @@ const signup = catchAsync(async (req, res) => {
 
 const signIn = catchAsync(async (req, res) => {
   const result = await AuthServices.signin(req.body);
-  const { user, token, refreshToken } = result;
+  const {  token, refreshToken } = result;
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: config.NODE_ENV === "production",
@@ -39,7 +39,7 @@ const signIn = catchAsync(async (req, res) => {
       success: true,
       statusCode: 200,
       message: "User logged in successfully",
-      data: { user, token },
+      data: {  token, refreshToken },
     });
   } else {
     res.status(404).json({
