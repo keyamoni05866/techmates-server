@@ -8,17 +8,17 @@ import jwt from "jsonwebtoken";
 //sign up for user and admin
 const signup = async (payload: TUser) => {
   //if user exists
-  const user = await User.findOne({ email: payload.email });
-  if (user) {
+  const getUser = await User.findOne({ email: payload.email });
+  if (getUser) {
     throw new AppError(400, "The User is already Exists.");
   }
 
   payload.role = "user";
 
-  const newUser = await User.create(payload);
+  const user = await User.create(payload);
 
   const jwtPayload = {
-    newUser,
+    user,
   };
 
   //access token
@@ -37,6 +37,7 @@ const signup = async (payload: TUser) => {
   );
 
   return {
+    user,
     token,
     refreshToken,
   };
@@ -79,6 +80,7 @@ const signin = async (payload: TSignInUser) => {
   );
 
   return {
+    user,
     token,
     refreshToken,
   };

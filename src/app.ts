@@ -16,7 +16,7 @@ app.use(cors());
 app.use("/api", router);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to Car Rental Reservation Management System");
+  res.send("Welcome to TechMates server");
 });
 
 app.use(globalErrorHandler);
