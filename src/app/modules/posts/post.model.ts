@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import { TPost } from "./posts.interface";
 
 const commentSchema = new Schema({
@@ -23,7 +23,9 @@ const postSchema = new Schema<TPost>(
       type: String,
       required: true,
     },
-    author: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    author: { type: Schema.Types.ObjectId, ref: "User" },
+    Votes: { type: Number, default: 0 },
+    VotedUsers: [{ type: Types.ObjectId, ref: "User" }],
     comments: [commentSchema],
     isPremium: {
       type: Boolean,

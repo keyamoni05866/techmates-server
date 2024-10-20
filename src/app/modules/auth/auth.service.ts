@@ -86,7 +86,14 @@ const signin = async (payload: TSignInUser) => {
   };
 };
 
+const getSingUserFromDB = async (id: string) => {
+  const result = await User.findById({ _id: id });
+
+  return result;
+};
+
 export const AuthServices = {
   signup,
   signin,
+  getSingUserFromDB,
 };

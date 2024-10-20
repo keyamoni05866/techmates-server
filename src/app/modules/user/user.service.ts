@@ -19,43 +19,11 @@ const updateSingleUserFromDB = async (
   id: string,
   payload: TUserProfileUpdate
 ) => {
-  if (payload.oldPassword && payload.newPassword) {
-    //password matching
-    const user = await User.findOne({ email: payload.email });
-    const passwordMatched = await isPasswordMatched(
-      payload?.oldPassword,
-      user!.password
-    );
-    if (!passwordMatched) {
-      throw new AppError(401, "Password doesn't matched");
-    }
-
-    const newHashedPassword = await bcrypt.hash(
-      payload.newPassword,
-      Number(config.bcrypt_salt_round)
-    );
-
-    const payloadData = {
-      name: payload.name,
-      email: payload.email,
-      role: payload.role,
-      password: newHashedPassword,
-      termsConditionAccepted: payload.termsConditionAccepted,
-      phone: payload.phone,
-      address: payload.address,
-    };
-    const result = await User.findByIdAndUpdate(id, payloadData, {
-      new: true,
-      runValidators: true,
-    });
-    return result;
-  } else {
-    const result = await User.findByIdAndUpdate(id, payload, {
-      new: true,
-      runValidators: true,
-    });
-    return result;
-  }
+  const result = await User.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
 };
 
 const deleteAUser = async (id: string) => {

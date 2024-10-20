@@ -21,7 +21,7 @@ const createAUser = catchAsync(async (req, res) => {
   }
 });
 
-//get All Car
+//get All User
 const getAllUser = catchAsync(async (req, res) => {
   const result = await UserServices.getAllUserFromDB();
   if (result) {
@@ -47,7 +47,7 @@ const updateSingleUser = catchAsync(async (req, res) => {
     res.status(200).json({
       success: true,
       statusCode: 200,
-      message: "Updated Successfully",
+      message: "Profile Updated Successfully",
       data: result,
     });
   } else {

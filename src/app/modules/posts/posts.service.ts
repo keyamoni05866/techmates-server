@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import AppError from "../../errors/AppError";
 import { User } from "../user/user.model";
 import { Post } from "./post.model";
@@ -8,13 +9,29 @@ const createPostIntoDB = async (payload: TPost) => {
   return result;
 };
 
+const getAllPostFromDB = async () => {
+  const result = await Post.find()
+    .populate("author")
+    .populate("comments.user")
+    .sort({ createdAt: -1 });
+  return result;
+};
 const getMyPostFromDB = async (email: string) => {
   const getUser = await User.findOne({ email });
   const userId = getUser?._id;
+  console.log(userId);
   const result = await Post.find({
     author: userId,
   })
-    .populate("user")
+    .populate("author")
+    .populate("comments.user")
+    .sort({ createdAt: -1 });
+
+  return result;
+};
+const getSinglePostFromDB = async (id: string) => {
+  const result = await Post.findById(id)
+    .populate("author")
     .populate("comments.user");
   return result;
 };
@@ -55,9 +72,40 @@ const deletePostFromDB = async (id: string, email: string) => {
   return result;
 };
 
+const voteForPostFromDB = async (postId: string, userId: string) => {
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new Error("Post Not Found");
+  }
+  const getUser = await User.findById(userId);
+  if (!getUser) {
+    throw new Error("User not found");
+  }
+  const user = getUser._id;
+  if (post.author.equals(user)) {
+    throw new Error("You can not vote your post");
+  }
+
+  const hasVoted = post.VotedUsers?.includes(user);
+  if (hasVoted) {
+    post.VotedUsers = post.VotedUsers?.filter((id) => !id.equals(user));
+    post.Votes = (post.Votes || 1) - 1;
+  } else {
+    post.VotedUsers?.push(user);
+    post.Votes = (post.Votes || 0) + 1;
+  }
+  const updatedPost = await post.save();
+  await updatedPost.populate("author");
+
+  return updatedPost;
+};
+
 export const PostServices = {
   createPostIntoDB,
+  getAllPostFromDB,
+  getSinglePostFromDB,
   updatePostFromDB,
   getMyPostFromDB,
   deletePostFromDB,
+  voteForPostFromDB,
 };

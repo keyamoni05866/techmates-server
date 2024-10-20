@@ -3,6 +3,8 @@ import { AuthControllers } from "./auth.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
 
 import signInValidation from "./auth.validation";
+import auth from "../../middlewares/auth";
+import { USER_Role } from "../user/user.constant";
 
 const router = express.Router();
 
@@ -11,6 +13,7 @@ router.post(
 
   AuthControllers.signup
 );
+router.get("/email", AuthControllers.getSingleUser);
 router.post(
   "/signin",
   validateRequest(signInValidation),
