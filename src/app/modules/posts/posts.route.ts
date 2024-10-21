@@ -12,6 +12,11 @@ router.get("/myPosts", auth(USER_Role.user), PostsControllers.getMyPost);
 router.get("/:id", PostsControllers.getSinglePost);
 router.post("/create-post", auth(USER_Role.user), PostsControllers.createPost);
 router.patch("/:postId", auth(USER_Role.user), PostsControllers.updatePost);
+router.patch(
+  "/comment/:postId",
+  auth(USER_Role.user),
+  PostsControllers.postComment
+);
 router.patch("/vote/:postId", auth(USER_Role.user), PostsControllers.VotePost);
 router.delete("/:postId", auth(USER_Role.user), PostsControllers.deletePost);
 

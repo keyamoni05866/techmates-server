@@ -1,9 +1,5 @@
 import { Types } from "mongoose";
 
-export type TVotes = {
-  user: Types.ObjectId;
-};
-
 export type TComments = {
   _id?: string;
   user: Types.ObjectId;

@@ -132,7 +132,29 @@ const VotePost = catchAsync(async (req, res) => {
     res.status(200).json({
       success: true,
       statusCode: 200,
-      message: `Vote done`,
+      message: `Vote Updated`,
+      data: result,
+    });
+  } else {
+    res.status(404).json({
+      success: true,
+      statusCode: 404,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+});
+const postComment = catchAsync(async (req, res) => {
+  const email = req.user?.user?.email;
+  // console.log(userId);
+  const { postId } = req.params;
+  // console.log(postId);
+  const result = await PostServices.postCommentFromDB(postId, email, req.body);
+  if (result) {
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: `Thanks for your comment`,
       data: result,
     });
   } else {
@@ -153,4 +175,5 @@ export const PostsControllers = {
   updatePost,
   deletePost,
   VotePost,
+  postComment,
 };

@@ -30,7 +30,7 @@ const getMyPostFromDB = async (email: string) => {
   return result;
 };
 const getSinglePostFromDB = async (id: string) => {
-  const result = await Post.findById(id)
+  const result = await Post.findById({ _id: id })
     .populate("author")
     .populate("comments.user");
   return result;
@@ -100,6 +100,38 @@ const voteForPostFromDB = async (postId: string, userId: string) => {
   return updatedPost;
 };
 
+const postCommentFromDB = async (
+  id: string,
+  email: string,
+  payload: Record<string, undefined>
+) => {
+  const { comment } = payload;
+  const getPost = await Post.findById(id);
+  if (!getPost) {
+    throw new Error("Post not found");
+  }
+  const getUser = await User.findOne({ email });
+  if (!getUser) {
+    throw new Error("User not Found");
+  }
+  const result = await Post.findByIdAndUpdate(
+    id,
+    {
+      $push: {
+        comments: {
+          user: getUser._id,
+          comment: comment,
+        },
+      },
+    },
+    { new: true }
+  )
+    .populate("author")
+    .populate("comments.user");
+
+  return result;
+};
+
 export const PostServices = {
   createPostIntoDB,
   getAllPostFromDB,
@@ -108,4 +140,5 @@ export const PostServices = {
   getMyPostFromDB,
   deletePostFromDB,
   voteForPostFromDB,
+  postCommentFromDB,
 };
