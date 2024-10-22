@@ -132,6 +132,71 @@ const postCommentFromDB = async (
   return result;
 };
 
+const postCommentUpdateFromDB = async (
+  id: string,
+  email: string,
+  payload: Record<string, undefined>
+) => {
+  const { commentText, commentId } = payload;
+  const getPost = await Post.findById(id);
+  if (!getPost) {
+    throw new Error("Post Not Found");
+  }
+  const getPostCommentWithPostId = getPost?.comments;
+  const commentExistsOrNot = getPostCommentWithPostId?.find(
+    (comment) => comment._id?.toString() === commentId
+  );
+  if (!commentExistsOrNot) {
+    throw new Error("Comment not found");
+  }
+  const getUser = await User.findOne({ email });
+  if (!getUser) {
+    throw new Error("user not found");
+  }
+  if (!commentExistsOrNot.user.equals(getUser._id as unknown as string)) {
+    throw new Error("This is not your comments");
+  }
+  const result = await Post.findOneAndUpdate(
+    { _id: id, "comments._id": commentId },
+    {
+      $set: {
+        "comments.$.comment": commentText,
+      },
+    },
+    { new: true }
+  );
+  return result;
+};
+
+const postCommentDeleteFromDB = async (
+  id: string,
+  email: string,
+  commentId: string
+) => {
+  console.log(commentId);
+  const getPost = await Post.findById(id);
+  if (!getPost) {
+    throw new Error("Post not found");
+  }
+  const getUser = await User.findOne({ email });
+  if (!getUser) {
+    throw new Error("User not Found");
+  }
+  const result = await Post.findByIdAndUpdate(
+    id,
+    {
+      $pull: {
+        comments: { _id: commentId },
+      },
+    },
+    { new: true }
+  )
+    .populate("author")
+    .populate("comments.user");
+
+  return result;
+};
+
 export const PostServices = {
   createPostIntoDB,
   getAllPostFromDB,
@@ -141,4 +206,6 @@ export const PostServices = {
   deletePostFromDB,
   voteForPostFromDB,
   postCommentFromDB,
+  postCommentUpdateFromDB,
+  postCommentDeleteFromDB,
 };

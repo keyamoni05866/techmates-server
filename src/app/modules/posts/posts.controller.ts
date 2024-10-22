@@ -166,6 +166,61 @@ const postComment = catchAsync(async (req, res) => {
     });
   }
 });
+const postCommentUpdate = catchAsync(async (req, res) => {
+  const email = req.user?.user?.email;
+  // console.log(userId);
+  const { postId } = req.params;
+  // console.log(postId);
+  const result = await PostServices.postCommentUpdateFromDB(
+    postId,
+    email,
+    req.body
+  );
+  if (result) {
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: `Update Your Comment`,
+      data: result,
+    });
+  } else {
+    res.status(404).json({
+      success: true,
+      statusCode: 404,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+});
+const postCommentDelete = catchAsync(async (req, res) => {
+  const email = req.user?.user?.email;
+  // console.log(userId);
+  const { postId } = req.params;
+  // console.log(postId);
+
+  const { commentId } = req.body;
+  // console.log(commentId);
+  const result = await PostServices.postCommentDeleteFromDB(
+    postId,
+    email,
+    commentId
+  );
+  if (result) {
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: `Delete Your Comment`,
+      data: result,
+    });
+  } else {
+    res.status(404).json({
+      success: true,
+      statusCode: 404,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+});
 
 export const PostsControllers = {
   createPost,
@@ -176,4 +231,6 @@ export const PostsControllers = {
   deletePost,
   VotePost,
   postComment,
+  postCommentUpdate,
+  postCommentDelete,
 };

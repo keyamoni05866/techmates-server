@@ -17,6 +17,16 @@ router.patch(
   auth(USER_Role.user),
   PostsControllers.postComment
 );
+router.patch(
+  "/comment-update/:postId",
+  auth(USER_Role.user),
+  PostsControllers.postCommentUpdate
+);
+router.patch(
+  "/comment-delete/:postId",
+  auth(USER_Role.user),
+  PostsControllers.postCommentDelete
+);
 router.patch("/vote/:postId", auth(USER_Role.user), PostsControllers.VotePost);
 router.delete("/:postId", auth(USER_Role.user), PostsControllers.deletePost);
 
