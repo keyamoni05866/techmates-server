@@ -1,9 +1,5 @@
-import config from "../../config";
-import AppError from "../../errors/AppError";
-import { isPasswordMatched } from "../auth/auth.util";
 import { TUser, TUserProfileUpdate } from "./user.interface";
 import { User } from "./user.model";
-import bcrypt from "bcrypt";
 
 const createAUser = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -12,6 +8,12 @@ const createAUser = async (payload: TUser) => {
 
 const getAllUserFromDB = async () => {
   const result = await User.find();
+  return result;
+};
+
+const getSingleUserFromDB = async (id: string) => {
+  const result = await User.findById(id);
+
   return result;
 };
 
@@ -34,6 +36,7 @@ const deleteAUser = async (id: string) => {
 export const UserServices = {
   createAUser,
   getAllUserFromDB,
+  getSingleUserFromDB,
   updateSingleUserFromDB,
   deleteAUser,
 };

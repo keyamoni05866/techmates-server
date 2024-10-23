@@ -8,6 +8,7 @@ const router = express.Router();
 //get all car route
 router.post("/create-user", auth(USER_Role.admin), UserControllers.createAUser);
 router.get("/", UserControllers.getAllUser);
+router.get("/:userId", UserControllers.getSingleUser);
 
 router.patch("/:id", auth(USER_Role.user), UserControllers.updateSingleUser);
 
