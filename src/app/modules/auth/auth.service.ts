@@ -3,8 +3,9 @@ import AppError from "../../errors/AppError";
 import { TUser } from "../user/user.interface";
 import { User } from "../user/user.model";
 import { TSignInUser } from "./auth.interface";
-import { isPasswordMatched } from "./auth.util";
+
 import jwt from "jsonwebtoken";
+
 //sign up for user and admin
 const signup = async (payload: TUser) => {
   //if user exists
@@ -49,14 +50,9 @@ const signin = async (payload: TSignInUser) => {
   if (!user) {
     throw new AppError(401, "User doesn't Exists");
   }
-  //password matching
-
-  const passwordMatched = await isPasswordMatched(
-    payload?.password,
-    user?.password
-  );
-  if (!passwordMatched) {
-    throw new AppError(401, "Password doesn't matched");
+  // console.log(user);
+  if (user.password !== payload.password) {
+    throw new AppError(401, "Password doesn't match");
   }
 
   //access granted: now sending access token
@@ -86,14 +82,7 @@ const signin = async (payload: TSignInUser) => {
   };
 };
 
-const getSingUserFromDB = async (id: string) => {
-  const result = await User.findById({ _id: id });
-
-  return result;
-};
-
 export const AuthServices = {
   signup,
   signin,
-  getSingUserFromDB,
 };

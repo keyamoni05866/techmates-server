@@ -1,8 +1,7 @@
 import mongoose, { Schema, model } from "mongoose";
-import { TUser } from "./user.interface";
+import { TUser, UserModel } from "./user.interface";
 import config from "../../config";
-import bcrypt from "bcrypt";
-
+import bcryptjs from "bcryptjs";
 const userSchema = new Schema<TUser>(
   {
     name: {
@@ -50,14 +49,23 @@ const userSchema = new Schema<TUser>(
 
 //hashing password
 
-userSchema.pre("save", async function (next) {
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_round)
-  );
-  next();
-});
+// userSchema.pre("save", async function (next) {
+//   const user = this;
+//   user.password = await bcryptjs.hash(
+//     user.password,
+//     Number(config.bcrypt_salt_round)
+//   );
+//   next();
+// });
+
+// userSchema.pre("save", async function (next) {
+//   const user = this;
+//   user.password = await bcrypt.hash(
+//     user.password,
+//     Number(config.bcrypt_salt_round)
+//   );
+//   next();
+// });
 
 //this is for password hiding
 // userSchema.methods.toJSON = function () {

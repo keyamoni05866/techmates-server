@@ -4,6 +4,7 @@ import { catchAsync } from "../../utils/catchAsync";
 import { AuthServices } from "./auth.service";
 
 const signup = catchAsync(async (req, res) => {
+  // console.log(req.body);
   const result = await AuthServices.signup(req.body);
   const { user, token, refreshToken } = result;
   res.cookie("refreshToken", refreshToken, {
@@ -27,32 +28,10 @@ const signup = catchAsync(async (req, res) => {
   }
 });
 
-const getSingleUser = catchAsync(async (req, res) => {
-  //   console.log(req);
-  // const email = req.user?.user?.email;
-  // //   console.log(email);
-  const { id } = req.params;
-  const result = await AuthServices.getSingUserFromDB(id);
-
-  if (result) {
-    res.status(200).json({
-      success: true,
-      statusCode: 200,
-      message: `Single User Retrieved Successfully`,
-      data: result,
-    });
-  } else {
-    res.status(404).json({
-      success: true,
-      statusCode: 404,
-      message: "No Data Found",
-      data: [],
-    });
-  }
-});
-
 const signIn = catchAsync(async (req, res) => {
+  console.log(req.body);
   const result = await AuthServices.signin(req.body);
+
   const { user, token, refreshToken } = result;
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
@@ -77,5 +56,4 @@ const signIn = catchAsync(async (req, res) => {
 export const AuthControllers = {
   signup,
   signIn,
-  getSingleUser,
 };

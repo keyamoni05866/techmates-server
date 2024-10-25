@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { TUser, TUserProfileUpdate } from "./user.interface";
 import { User } from "./user.model";
 
@@ -33,10 +34,38 @@ const deleteAUser = async (id: string) => {
   return result;
 };
 
+// Follow a user
+export const followUser = async (followerId: string, followingId: string) => {
+  const userId = new mongoose.Types.ObjectId(followerId);
+  const targetUserId = new mongoose.Types.ObjectId(followingId);
+
+  if (userId.equals(targetUserId)) {
+    throw new Error("You cannot follow yourself");
+  }
+
+  const user = await User.findById(userId);
+  const targetUser = await User.findById(targetUserId);
+
+  if (!user || !targetUser) {
+    throw new Error("User not found");
+  }
+
+  if (user.following!.includes(targetUserId)) {
+    throw new Error("You are already following this user");
+  }
+  user.following?.push(targetUserId);
+  targetUser.followers?.push(userId);
+
+  await user.save();
+  await targetUser.save();
+  return { user };
+};
+
 export const UserServices = {
   createAUser,
   getAllUserFromDB,
   getSingleUserFromDB,
   updateSingleUserFromDB,
   deleteAUser,
+  followUser,
 };

@@ -13,7 +13,7 @@ router.post(
 
   AuthControllers.signup
 );
-router.get("/email", AuthControllers.getSingleUser);
+
 router.post(
   "/signin",
   validateRequest(signInValidation),

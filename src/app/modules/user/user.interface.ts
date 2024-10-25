@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 export type TUser = {
   name: string;
@@ -26,3 +26,10 @@ export type TUserProfileUpdate = {
   address?: string;
   status?: "active" | "blocked";
 };
+
+export interface UserModel {
+  isPasswordMatched(
+    plainTextPassword: string,
+    hashTextPassword: string
+  ): Promise<boolean>;
+}
