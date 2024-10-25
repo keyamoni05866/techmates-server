@@ -119,6 +119,26 @@ const followUser = catchAsync(async (req, res) => {
     });
   }
 });
+const unFollowUser = catchAsync(async (req, res) => {
+  const { followerId, followingId } = req.body;
+  const result = await UserServices.unFollowUser(followerId, followingId);
+
+  if (result) {
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: `You are Unfollowing`,
+      data: result,
+    });
+  } else {
+    res.status(404).json({
+      success: true,
+      statusCode: 404,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+});
 
 export const UserControllers = {
   createAUser,
@@ -127,4 +147,5 @@ export const UserControllers = {
   updateSingleUser,
   deleteUser,
   followUser,
+  unFollowUser,
 };

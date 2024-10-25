@@ -29,7 +29,7 @@ const signup = catchAsync(async (req, res) => {
 });
 
 const signIn = catchAsync(async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const result = await AuthServices.signin(req.body);
 
   const { user, token, refreshToken } = result;

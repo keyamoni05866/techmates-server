@@ -11,6 +11,7 @@ router.get("/", UserControllers.getAllUser);
 router.get("/:userId", UserControllers.getSingleUser);
 
 router.patch("/follow", UserControllers.followUser);
+router.patch("/unfollow", UserControllers.unFollowUser);
 router.patch("/:id", auth(USER_Role.user), UserControllers.updateSingleUser);
 
 router.delete("/:id", auth(USER_Role.admin), UserControllers.deleteUser);

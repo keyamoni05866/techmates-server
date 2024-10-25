@@ -35,7 +35,7 @@ const deleteAUser = async (id: string) => {
 };
 
 // Follow a user
-export const followUser = async (followerId: string, followingId: string) => {
+const followUser = async (followerId: string, followingId: string) => {
   const userId = new mongoose.Types.ObjectId(followerId);
   const targetUserId = new mongoose.Types.ObjectId(followingId);
 
@@ -60,6 +60,34 @@ export const followUser = async (followerId: string, followingId: string) => {
   await targetUser.save();
   return { user };
 };
+// Unfollow a user
+const unFollowUser = async (followerId: string, followingId: string) => {
+  const userId = new mongoose.Types.ObjectId(followerId);
+  const targetUserId = new mongoose.Types.ObjectId(followingId);
+
+  if (userId.equals(targetUserId)) {
+    throw new Error("You cannot unfollow yourself");
+  }
+
+  const user = await User.findById(userId);
+  const targetUser = await User.findById(targetUserId);
+
+  if (!user || !targetUser) {
+    throw new Error("User not found");
+  }
+
+  if (!user.following!.includes(targetUserId)) {
+    throw new Error("You are not following");
+  }
+  user.following = user.following?.filter((id) => !id.equals(targetUserId));
+  targetUser.followers = targetUser.followers?.filter(
+    (id) => !id.equals(userId)
+  );
+
+  await user.save();
+  await targetUser.save();
+  return { user };
+};
 
 export const UserServices = {
   createAUser,
@@ -68,4 +96,5 @@ export const UserServices = {
   updateSingleUserFromDB,
   deleteAUser,
   followUser,
+  unFollowUser,
 };
