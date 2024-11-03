@@ -25,6 +25,7 @@ const postSchema = new Schema<TPost>(
     },
     author: { type: Schema.Types.ObjectId, ref: "User" },
     Votes: { type: Number, default: 0 },
+    views: { type: Number, default: 0 },
     VotedUsers: [{ type: Types.ObjectId, ref: "User" }],
     comments: [commentSchema],
     isPremium: {

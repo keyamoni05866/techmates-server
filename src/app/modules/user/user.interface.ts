@@ -9,6 +9,8 @@ export type TUser = {
   followers?: mongoose.Types.ObjectId[];
   following?: mongoose.Types.ObjectId[];
   verified?: boolean;
+  transactionId?: string;
+  paymentStatus?: "pending" | "paid";
   number?: string;
   address?: string;
   status: "active" | "blocked";

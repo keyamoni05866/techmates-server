@@ -140,6 +140,27 @@ const unFollowUser = catchAsync(async (req, res) => {
   }
 });
 
+const paymentUser = catchAsync(async (req, res) => {
+  const email = req.user?.user?.email;
+  const userData = req.body;
+  const result = await UserServices.paymentSystemImplement(email, userData);
+  if (result) {
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: "Payment Successful",
+      data: result,
+    });
+  } else {
+    res.status(404).json({
+      success: true,
+      statusCode: 404,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+});
+
 export const UserControllers = {
   createAUser,
   getAllUser,
@@ -148,4 +169,5 @@ export const UserControllers = {
   deleteUser,
   followUser,
   unFollowUser,
+  paymentUser,
 };

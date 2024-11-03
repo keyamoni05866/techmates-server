@@ -2,15 +2,29 @@ import { Types } from "mongoose";
 import AppError from "../../errors/AppError";
 import { User } from "../user/user.model";
 import { Post } from "./post.model";
-import { TPost, TUpdatePost } from "./posts.interface";
+import { TPost, TPostsQuery, TUpdatePost } from "./posts.interface";
 
 const createPostIntoDB = async (payload: TPost) => {
   const result = (await Post.create(payload)).populate("author");
   return result;
 };
 
-const getAllPostFromDB = async () => {
-  const result = await Post.find()
+const getAllPostFromDB = async (allQuery: TPostsQuery) => {
+  const { searchQuery, selectedCategory } = allQuery;
+
+  const query: any = {};
+
+  if (searchQuery) {
+    query.$or = [
+      { title: { $regex: searchQuery, $options: "i" } },
+      { content: { $regex: searchQuery, $options: "i" } },
+    ];
+  }
+  if (selectedCategory && selectedCategory !== "All") {
+    query.category = selectedCategory;
+  }
+
+  const result = await Post.find(query)
     .populate("author")
     .populate("comments.user")
     .sort({ createdAt: -1 });
@@ -29,11 +43,20 @@ const getMyPostFromDB = async (email: string) => {
 
   return result;
 };
+
 const getSinglePostFromDB = async (id: string) => {
-  const result = await Post.findById({ _id: id })
+  const post = await Post.findById(id)
     .populate("author")
     .populate("comments.user");
-  return result;
+
+  if (!post) {
+    throw new Error("not found");
+  }
+
+  // Increment the views count
+  post.views = post?.views! + 1;
+  await post.save();
+  return post;
 };
 
 const updatePostFromDB = async (
@@ -197,6 +220,32 @@ const postCommentDeleteFromDB = async (
   return result;
 };
 
+// post delete from admin side
+const deletePostFromAdmin = async (id: string) => {
+  const result = await Post.findByIdAndDelete(id);
+  return result;
+};
+
+// users post analytics
+
+const getUserPostAnalytics = async (userId: string) => {
+  const userPosts = await Post.find({ author: userId });
+  const totalVotes = userPosts.reduce(
+    (sum, post) => sum + (post.Votes || 0),
+    0
+  );
+  const totalComments = userPosts.reduce(
+    (sum, post) => sum + (post.comments?.length || 0),
+    0
+  );
+  const totalViews = userPosts.reduce(
+    (sum, post) => sum + (post.views || 0),
+    0
+  );
+
+  return { totalVotes, totalComments, totalViews };
+};
+
 export const PostServices = {
   createPostIntoDB,
   getAllPostFromDB,
@@ -208,4 +257,6 @@ export const PostServices = {
   postCommentFromDB,
   postCommentUpdateFromDB,
   postCommentDeleteFromDB,
+  deletePostFromAdmin,
+  getUserPostAnalytics,
 };

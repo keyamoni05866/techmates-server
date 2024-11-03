@@ -42,7 +42,12 @@ const getMyPost = catchAsync(async (req, res) => {
   }
 });
 const getAllPost = catchAsync(async (req, res) => {
-  const result = await PostServices.getAllPostFromDB();
+  // const { searchQuery, category, minPrice, maxPrice, sortByOrder } = req.query;
+  const { searchQuery, selectedCategory } = req.query;
+  const result = await PostServices.getAllPostFromDB({
+    searchQuery: searchQuery as string,
+    selectedCategory: selectedCategory as string,
+  });
 
   if (result) {
     res.status(200).json({
@@ -110,6 +115,26 @@ const deletePost = catchAsync(async (req, res) => {
       success: true,
       statusCode: 200,
       message: `Post Deleted`,
+      data: result,
+    });
+  } else {
+    res.status(404).json({
+      success: true,
+      statusCode: 404,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+});
+// admin side post delete
+const deletePostByAdmin = catchAsync(async (req, res) => {
+  const { postId } = req.params;
+  const result = await PostServices.deletePostFromAdmin(postId);
+  if (result) {
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: `Post Deleted Successfully`,
       data: result,
     });
   } else {
@@ -222,6 +247,30 @@ const postCommentDelete = catchAsync(async (req, res) => {
   }
 });
 
+// Users Post Analytics
+const PostAnalytics = catchAsync(async (req, res) => {
+  const userId = req.user?.user?._id;
+  // console.log(userId);
+
+  // console.log(postId);
+  const result = await PostServices.getUserPostAnalytics(userId);
+  if (result) {
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: `Analytics get successfully`,
+      data: result,
+    });
+  } else {
+    res.status(404).json({
+      success: true,
+      statusCode: 404,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+});
+
 export const PostsControllers = {
   createPost,
   getAllPost,
@@ -233,4 +282,6 @@ export const PostsControllers = {
   postComment,
   postCommentUpdate,
   postCommentDelete,
+  deletePostByAdmin,
+  PostAnalytics,
 };

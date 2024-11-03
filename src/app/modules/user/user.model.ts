@@ -30,10 +30,16 @@ const userSchema = new Schema<TUser>(
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     verified: { type: Boolean, default: false },
-
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid"],
+      default: "pending",
+    },
+    transactionId: { type: String },
     number: {
       type: String,
     },
+
     address: {
       type: String,
     },

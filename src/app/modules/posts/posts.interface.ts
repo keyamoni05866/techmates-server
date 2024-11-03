@@ -13,6 +13,7 @@ export type TPost = {
   category: string;
   author: Types.ObjectId;
   Votes?: number;
+  views?: number;
   VotedUsers?: Types.ObjectId[];
   isPremium: boolean;
   comments?: TComments[];
@@ -23,4 +24,9 @@ export type TUpdatePost = {
   image?: string;
   category?: string;
   isPremium?: boolean;
+};
+
+export type TPostsQuery = {
+  searchQuery?: string;
+  selectedCategory?: string;
 };

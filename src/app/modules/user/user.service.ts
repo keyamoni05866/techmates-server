@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { TUser, TUserProfileUpdate } from "./user.interface";
 import { User } from "./user.model";
+import { initiatePayment } from "../payment/payment.util";
 
 const createAUser = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -89,6 +90,24 @@ const unFollowUser = async (followerId: string, followingId: string) => {
   return { user };
 };
 
+// payment
+
+const paymentSystemImplement = async (email: string, payload: any) => {
+  const getUser = await User.findOne({ email });
+  const totalCost = payload.amount;
+  const transactionId = `TXN-${Date.now()}`;
+  await User.updateOne({ _id: getUser!._id }, { transactionId }, { new: true });
+  const paymentData = {
+    transactionId,
+    totalCost,
+    customerName: getUser?.name,
+    customerEmail: getUser?.email,
+    customerPhone: getUser?.number,
+  };
+  const paymentSession = await initiatePayment(paymentData);
+  return paymentSession;
+};
+
 export const UserServices = {
   createAUser,
   getAllUserFromDB,
@@ -97,4 +116,5 @@ export const UserServices = {
   deleteAUser,
   followUser,
   unFollowUser,
+  paymentSystemImplement,
 };
