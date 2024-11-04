@@ -39,4 +39,4 @@ The TechMates(Tech Tips & Tricks) project is a dynamic full-stack web applicatio
 
 ## Live Link-
 
-https://car-rental-reservation-server-three.vercel.app/
+https://techmates-server.vercel.app/
