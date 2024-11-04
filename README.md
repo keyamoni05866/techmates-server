@@ -1,18 +1,19 @@
 ## Introduction
 
-This is a Car Rental Reservation System management backend api creation project, which is using Mongoose for MongoDB interaction and Node.js for server, also used TypeScript.
+The TechMates(Tech Tips & Tricks) project is a dynamic full-stack web application designed to assist tech enthusiasts in mastering the ever-evolving technology landscape. Users can explore expert advice, share personal tech experiences, and contribute user-generated content on various topics including troubleshooting common tech issues, software reviews, gadget insights, and practical digital solutions. <br/>
 
-## Features
+**The platform features**
 
--CRUD Operation <br>
--Authentication with Jwt <br>
--Data Validation with Zod <br>
--Error Handling <br>
--Configurable via environment variables. <br>
+- User Registration & Authentication: : Customizable experience with user profiles. <br>
+- Premium Content Options : Access to exclusive tips through integrated payment. <br>
+- Upvoting & Community Interaction : Users can upvote valuable posts and engage with other tech enthusiasts. <br>
+- Following System : Users can follow, unfollow other tech enthusiasts. <br>
+- Content Analytics : Users can view detailed analytics on votes, comments, views on the User Profile.<br>
+- Admin Dashboard : Comprehensive management of posts, user data, and system settings.<br>
 
 ## Steps
 
-1. Clone the Repository --- https://github.com/keyamoni05866/carRental-reservation-system-server-with-mongoose <br>
+1. Clone the Repository --- https://github.com/keyamoni05866/techmates-server <br>
 2. Install Dependencies. --- npm install <br>
 3. Set up the Env variables:<br>
 
@@ -20,7 +21,6 @@ This is a Car Rental Reservation System management backend api creation project,
 - Add the following environment variables:<br>
   PORT=5000<br>
   DATABASE_URL= The connection string for your MongoDB database.<br>
-  BCRYPT_SALT_ROUND=use round for password bcrypt<br>
   JWT_ACCESS_SECRET=use your secret<br>
   JWT_ACCESS_EXPIRES_IN= use expiration time<br>
   JWT_REFRESH_SECRET=use refresh secret<br>
