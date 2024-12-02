@@ -270,6 +270,25 @@ const PostAnalytics = catchAsync(async (req, res) => {
     });
   }
 });
+// Users Post Analytics
+const allPostAnalytics = catchAsync(async (req, res) => {
+  const result = await PostServices.getAllPostAnalytics();
+  if (result) {
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: `All Post Analytics get successfully`,
+      data: result,
+    });
+  } else {
+    res.status(404).json({
+      success: true,
+      statusCode: 404,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+});
 
 export const PostsControllers = {
   createPost,
@@ -284,4 +303,5 @@ export const PostsControllers = {
   postCommentDelete,
   deletePostByAdmin,
   PostAnalytics,
+  allPostAnalytics,
 };

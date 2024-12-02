@@ -246,6 +246,29 @@ const getUserPostAnalytics = async (userId: string) => {
   return { totalVotes, totalComments, totalViews };
 };
 
+// all users post analytics for admin
+const getAllPostAnalytics = async () => {
+  const result = await Post.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalVotes: { $sum: "$Votes" },
+        totalComments: { $sum: { $size: "$comments" } },
+        totalViews: { $sum: "$views" },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        totalVotes: 1,
+        totalComments: 1,
+        totalViews: 1,
+      },
+    },
+  ]);
+  return result[0] || { totalVotes: 0, totalComments: 0, totalViews: 0 };
+};
+
 export const PostServices = {
   createPostIntoDB,
   getAllPostFromDB,
@@ -259,4 +282,5 @@ export const PostServices = {
   postCommentDeleteFromDB,
   deletePostFromAdmin,
   getUserPostAnalytics,
+  getAllPostAnalytics,
 };
