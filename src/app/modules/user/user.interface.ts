@@ -6,13 +6,17 @@ export type TUser = {
   role: "user" | "admin";
   password: string;
   profilePicture?: string;
+  bannerImage?: string;
+  education?: string;
+  livesIn?: string;
+  from?: string;
+  relation?: string;
   followers?: mongoose.Types.ObjectId[];
   following?: mongoose.Types.ObjectId[];
   verified?: boolean;
   transactionId?: string;
   paymentStatus?: "pending" | "paid";
   number?: string;
-  address?: string;
   status: "active" | "blocked";
 };
 export type TUserProfileUpdate = {
@@ -21,11 +25,15 @@ export type TUserProfileUpdate = {
   role?: "user" | "admin";
   password?: string;
   profilePicture?: string;
+  bannerImage?: string;
+  education?: string;
+  livesIn?: string;
+  from?: string;
+  relation?: string;
   followers?: mongoose.Types.ObjectId[];
   following?: mongoose.Types.ObjectId[];
   verified?: boolean;
   number?: string;
-  address?: string;
   status?: "active" | "blocked";
 };
 

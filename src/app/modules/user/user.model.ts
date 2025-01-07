@@ -39,8 +39,19 @@ const userSchema = new Schema<TUser>(
     number: {
       type: String,
     },
-
-    address: {
+    bannerImage: {
+      type: String,
+    },
+    education: {
+      type: String,
+    },
+    livesIn: {
+      type: String,
+    },
+    from: {
+      type: String,
+    },
+    relation: {
       type: String,
     },
     status: {
